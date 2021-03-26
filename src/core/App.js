@@ -1,5 +1,7 @@
 import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core';
 
+import { FormStorage } from '../provider/FormContext';
+
 import Routes from './routes';
 
 const theme = createMuiTheme({
@@ -37,7 +39,11 @@ const Root = () => {
 };
 
 const App = () => {
-  return <Root />;
+  return (
+    <FormStorage>
+      <Root />
+    </FormStorage>
+  );
 };
 
 export default App;

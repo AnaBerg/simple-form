@@ -1,13 +1,11 @@
-import MaskedInput from 'react-text-mask';
+import { useContext } from 'react';
 
-import {
-  makeStyles,
-  Paper,
-  Grid,
-  Typography,
-  TextField,
-  Button,
-} from '@material-ui/core';
+import { makeStyles, Paper, Grid, Typography, Button } from '@material-ui/core';
+
+import Input from '../Input';
+
+import { FormContext } from '../../provider/FormContext';
+import { MaskCard, MaskCpf, MaskCvv, MaskDate } from '../Input/utils/masks';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,103 +13,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MaskCpfInput = (props) => {
-  const { inputRef, ...other } = props;
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={[
-        /\d/,
-        /\d/,
-        /\d/,
-        '.',
-        /\d/,
-        /\d/,
-        /\d/,
-        '.',
-        /\d/,
-        /\d/,
-        /\d/,
-        '-',
-        /\d/,
-        /\d/,
-      ]}
-    />
-  );
-};
-
-const MaskCardInput = (props) => {
-  const { inputRef, ...other } = props;
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={[
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        ' ',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        ' ',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        ' ',
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-      ]}
-    />
-  );
-};
-
-const MaskCvvInput = (props) => {
-  const { inputRef, ...other } = props;
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={[/\d/, /\d/, /\d/]}
-    />
-  );
-};
-
-const MaskDateInput = (props) => {
-  const { inputRef, ...other } = props;
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={[/\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-    />
-  );
-};
-
-const handleSubmit = (event) => {
-  event.preventDefault();
-};
-
 const Form = () => {
   const classes = useStyles();
+  const { valueForm, handleChange } = useContext(FormContext);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
+  console.log(valueForm);
+
   return (
     <Paper className={classes.root}>
       <form onSubmit={handleSubmit}>
@@ -132,50 +43,46 @@ const Form = () => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth required label="Name" variant="outlined" />
+            <Input onChange={handleChange} label="Name" name="name" />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              fullWidth
-              required
+            <Input
+              onChange={handleChange}
               label="CPF"
-              variant="outlined"
-              InputProps={{
-                inputComponent: MaskCpfInput,
-              }}
+              name="cpf"
+              pattern={/^((\d{3}).(\d{3}).(\d{3})-(\d{2}))*$/}
+              error="Insert a valid CPF"
+              mask={MaskCpf}
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              fullWidth
-              required
-              label="Credit Card Number"
-              variant="outlined"
-              InputProps={{
-                inputComponent: MaskCardInput,
-              }}
+            <Input
+              onChange={handleChange}
+              label="Credit card number"
+              name="card"
+              pattern={/^((\d{4} ){3})(\d{4})*$/}
+              error="Insert a valid credit card number"
+              mask={MaskCard}
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              fullWidth
-              required
+            <Input
+              onChange={handleChange}
               label="CVV"
-              variant="outlined"
-              InputProps={{
-                inputComponent: MaskCvvInput,
-              }}
+              name="cvv"
+              pattern={/^((\d{3}))*$/}
+              error="Insert a valid CVV"
+              mask={MaskCvv}
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              fullWidth
-              required
+            <Input
+              onChange={handleChange}
               label="Expiration date"
-              variant="outlined"
-              InputProps={{
-                inputComponent: MaskDateInput,
-              }}
+              name="expDate"
+              pattern={/^(\d{2})\/(\d{4})*$/}
+              error="Insert a valid expiration date"
+              mask={MaskDate}
             />
           </Grid>
           <Grid item>
